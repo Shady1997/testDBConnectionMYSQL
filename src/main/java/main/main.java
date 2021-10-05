@@ -2,29 +2,38 @@ package main;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.user;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+//import java.util.Date;
 
-import com.mysql.cj.xdevapi.Statement;
+//import com.mysql.cj.xdevapi.Statement;
 
 public class main {
 	
 	private static Connection conn;
-	private static java.sql.Statement st;
+	private static Statement st;
 	private static ResultSet rs;
+	private static List<user> userList = new ArrayList();
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
 		// TODO : connect to Mysql Database
 
 		try {
-			// Declare Connectio Properties
+			// Declare Connection Properties
 //			String myDriver = "org.gjt.mm.mysql.Driver";
 			String myUrl = "jdbc:mysql://localhost:3307/test";
 			String dbUser = "root";
 			String dbPassword = "root";
 //			Class.forName(myDriver);
+			
+			
 			// create our mysql database connection
 			conn = DriverManager.getConnection(myUrl, dbUser, dbPassword);
 			
@@ -46,22 +55,32 @@ public class main {
 			
 
 			// execute the query, and get a java resultset
-			rs = ((java.sql.Statement) st).executeQuery(query);
+			rs = st.executeQuery(query);
 
-			// iterate through the java resultset
+//			// iterate through the java resultset
 			while (rs.next()) {
-				int id = rs.getInt("id");
-				String name = rs.getString("name");
-				String user = rs.getString("user");
-				String password = rs.getString("password");
-				// print the results
-				System.out.println(id+" "+ name+" "+ user+" "+ password);
+			user user = new user();
+	        user.setId(rs.getInt("id"));
+	        user.setName(rs.getString("name"));
+	        user.setUser(rs.getString("user"));
+	        user.setPassword(rs.getString("password"));
+	        userList.add(user);
+	       
+//				int id = rs.getInt("id");
+//				String name = rs.getString("name");
+//				String user = rs.getString("user");
+//				String password = rs.getString("password");
+//				// print the results
+//				System.out.println(id+" "+ name+" "+ user+" "+ password);
 			}
 			st.close();
 		} catch (Exception e) {
 			System.err.println("Got an exception! ");
 			System.err.println(e.getMessage());
 		}
+		
+		//Check if data retreived successfully
+	       System.out.println(Integer.toString(userList.get(0).getId()));
 		
 	}
 
